@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:os="http://www.mulesoft.org/schema/mule/os" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/os http://www.mulesoft.org/schema/mule/os/current/mule-os.xsd">
+	<sub-flow name="impl-cache-get-value-subflow" doc:id="f08ac500-cb9c-4b44-a388-807008fad1ff" >
+		<logger level="INFO" doc:name="Start impl get cache value log" doc:id="31c8768c-3ad1-4208-8da9-bd50ac684839" message='#[vars.correlationId ++ "| Start impl get cache value"]'/>
+		<ee:transform doc:name="Set cache details" doc:id="5a62e11d-9424-451c-aacc-3dd105af9dee" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+attributes.uriParams.'key'
+]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<flow-ref doc:name="sys-objectstore-retrieve-key-subflow" doc:id="eaeadeac-ec8a-46ed-8565-c83c644f78c5" name="sys-objectstore-retrieve-key-subflow"/>
+		<ee:transform doc:name="Set response from cache" doc:id="ba683bc6-7594-41f7-8242-e51014ec4ba1">
+			<ee:message>
+				<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{
+	value: payload
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="End impl get cache value log" doc:id="9afbd390-e9f7-4412-9c14-b161aad0b5ab" message='#[vars.correlationId ++ "| End impl get cache value"]'/>
+	</sub-flow>
+	<sub-flow name="impl-cache-set-value-subflow" doc:id="7645b4a9-284b-4b6a-bd92-c03dddbff715" >
+		<logger level="INFO" doc:name="Start impl set cache value log" doc:id="f8104c95-cbd9-4048-a69d-b5863f23c486" message='#[vars.correlationId ++ " | Start impl set cache value"]'/>
+		<ee:transform doc:name="Set cache details" doc:id="f4911452-1590-4440-a3b7-87461f19b371" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[output application/json
+skipNullOn="everywhere"
+---
+{
+	key: payload.key,
+	value: payload.value,
+	expiration: payload.expiration
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<flow-ref doc:name="sys-objectstore-store-key-subflow" doc:id="4d2edb6c-5d36-4dfa-80a4-d65d96b92de3" name="sys-objectstore-store-key-subflow"/>
+		<ee:transform doc:name="Set successful response" doc:id="cc50751d-7b34-4ddc-af86-9a201e40d6b5">
+			<ee:message>
+				<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{
+	message: p('sucessful.message')
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="End impl set cache value log" doc:id="d97a455f-e935-4635-bb16-24e4060f12e5" message='#[vars.correlationId ++ "|End impl set cache value"]'/>
+	</sub-flow>
+</mule>

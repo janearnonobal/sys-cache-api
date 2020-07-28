@@ -1,0 +1,24 @@
+#%RAML 1.0 Library
+
+traits:
+  hasClientIdEnforcement:
+    headers:
+      client-id:
+        description: Client Id for authentication purposes.
+        displayName: X-Client-Id
+        type: string
+        required: true
+        minLength: 10
+      client-secret:
+        displayName: X-Client-Secret
+        description: Client Secret for authentication purposes.
+        required: true
+        type: string
+        minLength: 10
+  isTraceable:
+    headers:
+      correlation-Id:
+        displayName: X-Correlation-Id
+        description: Client Secret for authentication purposes.
+        type: string
+  

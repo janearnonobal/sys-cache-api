@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<error-handler name="sys-cache-api_APIKIT_Error_Handler" doc:id="241ef3e8-04fc-4290-a6dc-9c781d23ac0f" >
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="5c68941c-b578-4c25-bf1b-5c016ec4d26f" type="APIKIT:BAD_REQUEST" >
+			<ee:transform doc:name="Set bad request response" doc:id="8935ce0f-85c8-43d4-a477-98be7feaf9d0" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd" >
+				<ee:message >
+					<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"code": "400",
+	"message": error.detailedDescription,
+	"correlationId": vars.correlationId
+}]]></ee:set-payload>
+				</ee:message>
+				<ee:variables >
+					<ee:set-variable variableName="httpStatus" ><![CDATA[400]]></ee:set-variable>
+				</ee:variables>
+			</ee:transform>
+		</on-error-propagate>
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="64d9146b-34d1-4197-a107-254a6553dbe6" type="APIKIT:NOT_FOUND" >
+			<ee:transform doc:name="Set not found response" doc:id="b53271a6-af3b-41f2-9501-37a63a24818e" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd" >
+				<ee:message >
+					<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"code": "404",
+	"message": error.detailedDescription,
+	"correlationId": vars.correlationId
+}]]></ee:set-payload>
+				</ee:message>
+				<ee:variables >
+					<ee:set-variable variableName="httpStatus" ><![CDATA[404]]></ee:set-variable>
+				</ee:variables>
+			</ee:transform>
+		</on-error-propagate>
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="ead5a941-3d90-4bcf-8ce9-fb0c66f87c19" type="APIKIT:METHOD_NOT_ALLOWED" >
+			<ee:transform doc:name="Set method not allowed response" doc:id="aa8b31a1-4a2f-461c-a7ce-90a29a4b5c89" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd" >
+				<ee:message >
+					<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"code": "405",
+	"message": error.detailedDescription,
+	"correlationId": vars.correlationId
+}]]></ee:set-payload>
+				</ee:message>
+				<ee:variables >
+					<ee:set-variable variableName="httpStatus" ><![CDATA[405]]></ee:set-variable>
+				</ee:variables>
+			</ee:transform>
+		</on-error-propagate>
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="f8f10064-63df-462c-bbf6-43541eed3447" type="APIKIT:UNSUPPORTED_MEDIA_TYPE" >
+			<ee:transform doc:name="Set unsupported media type response" doc:id="e424d4ab-55ee-4784-8d17-dfaf371db4a5" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd" >
+				<ee:message >
+					<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"code": "415",
+	"message": error.detailedDescription,
+	"correlationId": vars.correlationId
+}]]></ee:set-payload>
+				</ee:message>
+				<ee:variables >
+					<ee:set-variable variableName="httpStatus" ><![CDATA[415]]></ee:set-variable>
+				</ee:variables>
+			</ee:transform>
+		</on-error-propagate>
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="19ced1f6-4c0a-412e-9b9a-e1ea6229dfac" type="APIKIT:NOT_ACCEPTABLE" >
+			<ee:transform doc:name="Set not acceptable response" doc:id="fd3b0d94-3b50-4c41-a4d9-4d8f72a0d04d" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd" >
+				<ee:message >
+					<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"code": "406",
+	"message": error.detailedDescription,
+	"correlationId": vars.correlationId
+}]]></ee:set-payload>
+				</ee:message>
+				<ee:variables >
+					<ee:set-variable variableName="httpStatus" ><![CDATA[406]]></ee:set-variable>
+				</ee:variables>
+			</ee:transform>
+		</on-error-propagate>
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="f12f0e45-3676-42ee-91e7-ece3d5cfef49" type="APIKIT:NOT_IMPLEMENTED" >
+			<ee:transform doc:name="Set not implemented response" doc:id="a8a8e51a-a48b-4617-ad2f-88474df3a3bb" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd" >
+				<ee:message >
+					<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"code": "501",
+	"message": error.detailedDescription,
+	"correlationId": vars.correlationId
+}]]></ee:set-payload>
+				</ee:message>
+				<ee:variables >
+					<ee:set-variable variableName="httpStatus" ><![CDATA[501]]></ee:set-variable>
+				</ee:variables>
+			</ee:transform>
+		</on-error-propagate>
+	</error-handler>
+	<error-handler name="sys-cache-api_Shared_Error_Handler" doc:id="c3e38d2f-4bca-46fb-9065-b32910d9c8ba" >
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="34a875c8-3aca-4c18-899a-fe958f22fe3b" type="OS:KEY_NOT_FOUND">
+			<logger level="INFO" doc:name="Start key not found" doc:id="93168e34-19b9-46aa-8168-04a06bbc8b7e" message='#[vars.correlationId ++ "| Start key not found log"]'/>
+			<ee:transform doc:name="Set payload response" doc:id="347cf092-5fd0-4bcd-8bce-d0f3fe2f3a0d" >
+				<ee:message >
+					<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	value: null
+}]]></ee:set-payload>
+				</ee:message>
+				<ee:variables >
+					<ee:set-variable variableName="httpStatus" ><![CDATA[200]]></ee:set-variable>
+				</ee:variables>
+			</ee:transform>
+			<logger level="INFO" doc:name="End key not found log" doc:id="76bc7062-2fbb-4e0d-87e5-80d83c411770" message='#[vars.correlationId ++ "| End key not found"]'/>
+		</on-error-propagate>
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="e8a6f66c-a9dc-42db-bef5-2a5e2772d70e" type="REDIS:UNKNOWN">
+			<logger level="ERROR" doc:name="Start Redis unknown log" doc:id="fc175b9c-a0cc-4531-aa57-136f26a76719" message='#[vars.correlationId ++ "| Start Redis unknown"]' />
+			<ee:transform doc:name="Set response payload" doc:id="56b58566-78f8-481a-9b9f-e244e26df601" >
+				<ee:message >
+					<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"code": "500",
+	"message": error.detailedDescription,
+	"correlationId": vars.correlationId
+}]]></ee:set-payload>
+				</ee:message>
+				<ee:variables >
+					<ee:set-variable variableName="httpStatus" ><![CDATA[500]]></ee:set-variable>
+				</ee:variables>
+			</ee:transform>
+			<logger level="ERROR" doc:name="End Redis unknown log" doc:id="ee6db96d-f520-4ca7-9bf3-513d8a0ca1dd" message='#[vars.correlationId ++ "| End Redis unknown"]' />
+		</on-error-propagate>
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="ec511557-5111-4ae2-8380-eb4a9dc2fa71" type="ANY">
+			<logger level="ERROR" doc:name="Start ANY error log" doc:id="c46456d3-edbb-4cd3-a0e4-afeb030cc095" message='#[vars.correlationId] ++ "| Start " ++ error.detailedDescription' />
+			<ee:transform doc:name="Set response payload" doc:id="a5412feb-e900-4248-951b-a2d328f0468e">
+				<ee:message>
+					<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"code": "500",
+	"message": error.detailedDescription,
+	"correlationId": vars.correlationId
+}]]></ee:set-payload>
+				</ee:message>
+				<ee:variables>
+					<ee:set-variable variableName="httpStatus"><![CDATA[500]]></ee:set-variable>
+				</ee:variables>
+			</ee:transform>
+			<logger level="ERROR" doc:name="End ANY error log" doc:id="b68833f4-32b0-44e2-8b03-d9bf068c207d" message='#[vars.correlationId] ++ "| Start " ++ error.detailedDescription' />
+		</on-error-propagate>
+	</error-handler>
+</mule>

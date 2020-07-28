@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd http://www.mulesoft.org/schema/mule/mule-apikit http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd 
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+    <flow name="sys-cache-api-main">
+        <http:listener path="/api/*" config-ref="HTTPS_Listener_Config_sys-cache-api" doc:name="Sys cache api main listener">
+            <http:response statusCode="#[vars.httpStatus default 200]">
+                <http:headers><![CDATA[#[vars.outboundHeaders default {}]]]></http:headers>
+            </http:response>
+            <http:error-response statusCode="#[vars.httpStatus default 500]">
+                <http:body><![CDATA[#[payload]]]></http:body>
+                <http:headers><![CDATA[#[vars.outboundHeaders default {}]]]></http:headers>
+            </http:error-response>
+        </http:listener>
+        <ee:transform doc:name="Set correlationId" doc:id="ab4204e1-a73d-4cd5-8daa-b7cadd5989f1" >
+			<ee:message >
+			</ee:message>
+			<ee:variables >
+				<ee:set-variable variableName="correlationId" ><![CDATA[attributes.headers['Correlation-Id']]]></ee:set-variable>
+			</ee:variables>
+		</ee:transform>
+		<apikit:router config-ref="sys-cache-api-config"/>
+		<error-handler ref="sys-cache-api_APIKIT_Error_Handler" />
+    </flow>
+    <flow name="sys-cache-api-console">
+        <http:listener path="/console/*" config-ref="HTTPS_Listener_Config_sys-cache-api" doc:name="Sys cache api console listener">
+            <http:response statusCode="#[vars.httpStatus default 200]">
+                <http:headers><![CDATA[#[vars.outboundHeaders default {}]]]></http:headers>
+            </http:response>
+            <http:error-response statusCode="#[vars.httpStatus default 500]">
+                <http:body><![CDATA[#[payload]]]></http:body>
+                <http:headers><![CDATA[#[vars.outboundHeaders default {}]]]></http:headers>
+            </http:error-response>
+        </http:listener>
+		<apikit:console config-ref="sys-cache-api-config"/>
+		<error-handler ref="sys-cache-api_APIKIT_Error_Handler" />
+    </flow>
+	<flow name="post:\cache:sys-cache-api-config">
+		<flow-ref doc:name="impl-cache-set-value-subflow" doc:id="63931d25-fb47-4e5d-8b69-e1c1bff2eee2" name="impl-cache-set-value-subflow"/>
+		<error-handler ref="sys-cache-api_Shared_Error_Handler" />
+    </flow>
+    <flow name="get:\cache\(key):sys-cache-api-config">
+		<flow-ref doc:name="impl-cache-get-value-subflow" doc:id="9a714320-93d9-42b9-96f7-f37bcd3814e8" name="impl-cache-get-value-subflow"/>
+		<error-handler ref="sys-cache-api_Shared_Error_Handler" />
+    </flow>
+</mule>

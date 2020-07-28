@@ -1,0 +1,47 @@
+#%RAML 1.0
+version: v1
+title: Cache sAPI
+description: This a System API (sAPI) that retrieves a value and accepts key-value pair as an input to be saved in cache system.
+
+types:
+  request : !include /types/requestDataType.raml
+
+uses:
+  traitsLibrary: exchange_modules/72613f61-6538-4661-98a5-acb1c0a50cd3/spectre-common-traits/1.0.26/spectre-common-traits.raml
+  headerLibrary: /exchange_modules/72613f61-6538-4661-98a5-acb1c0a50cd3/spectre-common-header/1.0.10/spectre-common-header.raml
+
+resourceTypes:
+  uri-item:
+    description: Returns a value from cache system using the uri parameter.
+    get:
+      is: [ headerLibrary.hasClientIdEnforcement, headerLibrary.isTraceable,traitsLibrary.hasGenericError ]
+      responses:
+        200:
+          body:
+            application/json:
+              properties:
+                value:
+                  type: string
+                  example: "1"
+  item:
+    post:
+      is: [ headerLibrary.hasClientIdEnforcement, headerLibrary.isTraceable, traitsLibrary.hasGenericError ]
+      body:
+        application/json:
+          type: request
+      description: Creates new record in <<resourcePathName>> system.
+      responses:
+        200:
+          body:
+            application/json:
+              example:
+                {message: "Successfully process the request!"}
+
+/cache:
+  type: item
+/cache/{key}:
+  type: uri-item
+  uriParameters:
+    key:
+      type: string
+      maxLength: 100

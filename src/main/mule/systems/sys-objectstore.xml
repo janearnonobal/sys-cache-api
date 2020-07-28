@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:os="http://www.mulesoft.org/schema/mule/os" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/os http://www.mulesoft.org/schema/mule/os/current/mule-os.xsd">
+	<sub-flow name="sys-objectstore-retrieve-key-subflow" doc:id="3f7b1a6a-adb5-4ac0-9fa8-7afd0bbba1fe" >
+		<logger level="INFO" doc:name="Start sys objectstore retrieve key log" doc:id="7cedd068-739b-46d7-a021-448bd5574060" message='#[vars.correlationId ++ "| Start sys objectstore retrieve key"]'/>
+		<os:retrieve doc:name="Retrieve" doc:id="057fa65f-da8f-4917-b3be-bacd085aa5ee" key="#[payload]" objectStore="ObjectStore_cache"/>
+		<logger level="INFO" doc:name="End sys objectstore retrieve key" doc:id="2af8e571-5b50-42c1-9dbb-61201fc31905" message='#[vars.correlationId ++ "| End sys objectstore retrieve key"]'/>
+	</sub-flow>
+	<sub-flow name="sys-objectstore-store-key-subflow" doc:id="895cf355-3185-4ed9-8550-7a3c1b5bbd84" >
+		<logger level="INFO" doc:name="Start sys objectstore store key log" doc:id="0dcd40c8-d437-4e7c-9d9c-ab4f70ed5e59" message='#[vars.correlationId ++ "| Start sys objectstore store key"]'/>
+		<os:store doc:name="Store" doc:id="a5a1a114-1819-4b80-8860-9a2263adf5aa" key="#[payload.key]" objectStore="ObjectStore_cache">
+			<os:value ><![CDATA[#[payload.value]]]></os:value>
+		</os:store>
+		<logger level="INFO" doc:name="End sys objectstore store key" doc:id="53ba9220-9af5-41c4-b890-b72fabe1471c" message='#[vars.correlationId ++ "| End sys objectstore store key"]'/>
+	</sub-flow>
+</mule>

@@ -1,0 +1,31 @@
+#%RAML 1.0 Trait
+
+uses:
+  errorLibrary: /exchange_modules/72613f61-6538-4661-98a5-acb1c0a50cd3/spectre-common-error/1.0.3/spectre-common-error.raml
+
+responses:
+  400:
+    description: The request could not be understood by the server due to malformed syntax.
+    body:
+        application/json:
+          type: errorLibrary.genericErrorResponse
+  401:
+    description: Invalid Credentials
+    body:
+       application/json:
+        type: errorLibrary.genericErrorResponse
+  404:
+    description: The server has not found anything matching the Request-URI.
+    body:
+       application/json:
+        type: errorLibrary.genericErrorResponse
+  405:
+    description: The method specified in the Request-Line is not allowed for the resource identified by the Request-URI.
+    body:
+       application/json:
+        type: errorLibrary.genericErrorResponse
+  500:
+    description: The server encountered an unexpected condition which prevented it from fulfilling the request.
+    body:
+       application/json:
+        type: errorLibrary.genericErrorResponse  

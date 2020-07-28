@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:munit="http://www.mulesoft.org/schema/mule/munit" xmlns:munit-tools="http://www.mulesoft.org/schema/mule/munit-tools"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xsi:schemaLocation="
+		http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+		http://www.mulesoft.org/schema/mule/munit http://www.mulesoft.org/schema/mule/munit/current/mule-munit.xsd
+		http://www.mulesoft.org/schema/mule/munit-tools  http://www.mulesoft.org/schema/mule/munit-tools/current/mule-munit-tools.xsd">
+	<munit:config name="test-sys-cache-api.xml" />
+	<munit:test name="sys-cache-test-suite:get-cache" doc:id="25182ac8-36e7-473b-a01b-e503400ca66b" >
+		<munit:behavior>
+			<munit-tools:mock-when doc:name="redis:get" doc:id="372e09b2-009b-409e-aefb-5beaced75afe" processor="redis:get">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="Get" attributeName="doc:name" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value='#["1"]' mediaType="text/plain" encoding="UTF-8" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<munit:set-event doc:name="Set attributes" doc:id="45ebef33-1c78-4e5f-9d34-3c99ef7c3c7e" >
+				<munit:attributes value="#[{uriParams:{key:'spectre-freefb-639276749952'}}]" />
+				<munit:variables >
+					<munit:variable key="correlationId" value="${correlation.id}" />
+				</munit:variables>
+			</munit:set-event>
+			<flow-ref doc:name="get:\cache\(key):sys-cache-api-config" doc:id="a6e598da-13d7-4dea-926f-1393417f4272" name="get:\cache\(key):sys-cache-api-config"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-that doc:name="Value is not null" doc:id="9ff30515-1be3-4efe-905c-57be17b2a245" expression="#[payload]" is="#[MunitTools::notNullValue()]"/>
+		</munit:validation>
+	</munit:test>
+	<munit:test name="sys-cache-test-suite:set-cache" doc:id="711af27f-3a53-442d-a4b9-6efba77597f8" >
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="redis:set" doc:id="bbb010a9-081f-436a-9fc6-1e0212fc1584" processor="redis:set">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="Set" attributeName="doc:name" />
+					<munit-tools:with-attribute whereValue="Set" attributeName="doc:name" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value='#["OK"]' mediaType="text/plain" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<munit:set-event doc:name="Set cache payload" doc:id="220d5b17-847c-4ca4-bc14-bdd8a739ee60" >
+				<munit:payload value="#[MunitTools::getResourceAsString('examples/cache.json')]" mediaType="application/json" />
+				<munit:variables >
+					<munit:variable key="correlationId" value="${correlation.id}" />
+				</munit:variables>
+			</munit:set-event>
+			<flow-ref doc:name="post:\cache:sys-cache-api-config" doc:id="81d57d81-2cbd-40bb-a85e-974ce1cae5d1" name="post:\cache:sys-cache-api-config"/>
+		</munit:execution>
+		<munit:validation>
+			<munit-tools:assert-equals doc:name="Value stored" doc:id="276d5035-1e16-4d76-8251-6d486f049e4c" actual="#[payload.message]" expected='#["Successfully processed the request!"]'/>
+		</munit:validation>
+	</munit:test>
+	<munit:test name="sys-cache-test-suite:validation-cache" doc:id="ae8449e6-b3fc-40ba-b7a1-f3a0e951d074" expectedErrorType="REDIS:UNKNOWN">
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="redis:get" doc:id="bdf336b8-3b2b-4e0a-b868-b4318f40aedc" processor="redis:get" >
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="Get" attributeName="doc:name" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:error typeId="REDIS:UNKNOWN" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<munit:set-event doc:name="Set attributes" doc:id="51105b8e-b3aa-41f9-90fa-2f87dad6c142" >
+				<munit:attributes value="#[{uriParams:{key:'spectre-freefb-639276749952'}}]" />
+				<munit:variables >
+					<munit:variable key="correlationId" value="${correlation.id}" />
+				</munit:variables>
+			</munit:set-event>
+			<flow-ref doc:name="get:\cache\(key):sys-cache-api-config" doc:id="da46e8a1-76e0-44b6-9bd6-9382ba4eb4d1" name="get:\cache\(key):sys-cache-api-config" />
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-equals doc:name="Validate statusCode for Redis error exception" doc:id="fa89d27d-90b8-4ed0-9836-69a6f2f8cd35" expected="500" actual="#[attributes.statusCode]"/>
+		</munit:validation>
+	</munit:test>
+	<munit:test name="sys-cache-test-suite:bad_request" doc:id="6d36ff3c-d220-4627-b16a-109b70973f73" description="Test for APIKIT:BAD_REQUEST" expectedErrorType="APIKIT:BAD_REQUEST">
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="apikit:router throws APIKIT:BAD_REQUEST" doc:id="64fba227-d1cc-4b14-ba4e-fb31aedb588c" processor="apikit:router">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="sys-cache-api-config" attributeName="config-ref" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:error typeId="APIKIT:BAD_REQUEST" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<flow-ref doc:name="sys-cache-api-main" doc:id="bbb2b183-e9a1-4df5-b9d1-03af0d131159" name="sys-cache-api-main"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-equals doc:name="Validate statusCode for bad request" doc:id="bd5c9d27-2e68-4837-a0e3-429ef5ec07eb" actual="#[attributes.statusCode]" expected="400" />
+		</munit:validation>
+	</munit:test>
+	<munit:test name="sys-cache-test-suite:not-found" doc:id="7f33c346-a1bb-44c6-8393-b85aea5615b7" description="Test for APIKIT:NOT_FOUND" expectedErrorType="APIKIT:NOT_FOUND">
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="apikit:router throws APIKIT:NOT_FOUND" doc:id="c6fd185a-428a-448b-9b82-e08e6efa8fda" processor="apikit:router" >
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="sys-cache-api-config" attributeName="config-ref" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:error typeId="APIKIT:NOT_FOUND" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<flow-ref doc:name="sys-cache-api-main" doc:id="a8090602-e0e4-4103-8768-0ebcbb1cea7a" name="sys-cache-api-main" />
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-equals doc:name="Validate statusCode for not found" doc:id="c8544e0f-6c38-4950-adb8-07b55d2f0a3c" actual="#[attributes.statusCode]" expected="404" />
+		</munit:validation>
+	</munit:test>
+	<munit:test name="sys-cache-test-suite:method-not-allowed" doc:id="834c1463-29d5-44fe-9e39-208faa50039e" description="Test for APIKIT:METHOD_NOT_ALLOWED" expectedErrorType="APIKIT:METHOD_NOT_ALLOWED">
+		<munit:behavior>
+			<munit-tools:mock-when doc:name="apikit:router throws APIKIT:METHOD_NOT_ALLOWED" doc:id="36252016-557b-4f88-baf8-e0a93bb946d3" processor="apikit:router" >
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="sys-cache-api-config" attributeName="config-ref" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:error typeId="APIKIT:METHOD_NOT_ALLOWED" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<flow-ref doc:name="sys-cache-api-main" doc:id="ebaad992-e8a8-4751-b4ef-0634ab58f339" name="sys-cache-api-main" />
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-equals doc:name="Validate statusCode for method not allowed" doc:id="d214bcdc-536b-4cbd-af85-65fb7c211473" actual="#[attributes.statusCode]" expected="405" />
+		</munit:validation>
+	</munit:test>
+	<munit:test name="sys-cache-test-suite:unsupported-media-type" doc:id="3b50aa20-94a8-4b53-8a5e-6b14fa07de57" description="Test for APIKIT:UNSUPPORTED_MEDIA_TYPE" expectedErrorType="APIKIT:UNSUPPORTED_MEDIA_TYPE">
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="apikit:router throws APIKIT:UNSUPPORTED_MEDIA_TYPE" doc:id="ac655796-c8ed-4e58-886e-bd0bb2584145" processor="apikit:router" >
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="sys-cache-api-config" attributeName="config-ref" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:error typeId="APIKIT:UNSUPPORTED_MEDIA_TYPE" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<flow-ref doc:name="sys-cache-api-main" doc:id="981566d5-4296-4260-ac81-a39da362ee22" name="sys-cache-api-main" />
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-equals doc:name="Validate statusCode for unsupported media type" doc:id="fc708e62-559c-4f2e-a513-2362ce6d9ab3" actual="#[attributes.statusCode]" expected="415" />
+		</munit:validation>
+	</munit:test>
+	<munit:test name="sys-cache-test-suite:not-acceptable" doc:id="451984a5-83c8-4ff7-9e70-64188b68fbb2" description="Test for APIKIT:NOT_ACCEPTABLE" expectedErrorType="APIKIT:NOT_ACCEPTABLE">
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="apikit:router throws APIKIT:NOT_ACCEPTABLE" doc:id="ed35d0cb-007b-4132-a6bb-68b3d4e41693" processor="apikit:router" >
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="sys-cache-api-config" attributeName="config-ref" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:error typeId="APIKIT:NOT_ACCEPTABLE" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<flow-ref doc:name="sys-cache-api-main" doc:id="e6a83482-55d2-4089-9d84-0dd9d33d7712" name="sys-cache-api-main" />
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-equals doc:name="Validate statusCode for not acceptable" doc:id="88333ab2-5710-467d-b698-8acb13e9267f" actual="#[attributes.statusCode]" expected="406" />
+		</munit:validation>
+	</munit:test>
+	<munit:test name="sys-cache-test-suiteTest" doc:id="62f9a36a-aad9-41e2-af13-5713091e4613" description="Test for APIKIT:NOT_IMPLEMENTED" expectedErrorType="APIKIT:NOT_IMPLEMENTED">
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="apikit:router throws APIKIT:NOT_IMPLEMENTED" doc:id="c07a678c-9cb0-4c1c-aa35-73f206ac0da2" processor="apikit:router" >
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="sys-cache-api-config" attributeName="config-ref" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:error typeId="APIKIT:NOT_IMPLEMENTED" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<flow-ref doc:name="sys-cache-api-main" doc:id="e164a502-5dbc-479e-bf5a-296f6d3f96e3" name="sys-cache-api-main" />
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-equals doc:name="Validate statusCode for not implemented" doc:id="f3994413-0227-4d02-b068-69b12488efc1" actual="#[attributes.statusCode]" expected="501" />
+		</munit:validation>
+	</munit:test>
+
+</mule>

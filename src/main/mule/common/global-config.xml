@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:api-gateway="http://www.mulesoft.org/schema/mule/api-gateway" xmlns:secure-properties="http://www.mulesoft.org/schema/mule/secure-properties"
+	xmlns:tls="http://www.mulesoft.org/schema/mule/tls"
+	xmlns:os="http://www.mulesoft.org/schema/mule/os"
+	xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:redis="http://www.mulesoft.org/schema/mule/redis" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+	http://www.mulesoft.org/schema/mule/redis http://www.mulesoft.org/schema/mule/redis/current/mule-redis.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/mule-apikit http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd
+http://www.mulesoft.org/schema/mule/os http://www.mulesoft.org/schema/mule/os/current/mule-os.xsd
+http://www.mulesoft.org/schema/mule/tls http://www.mulesoft.org/schema/mule/tls/current/mule-tls.xsd
+http://www.mulesoft.org/schema/mule/secure-properties http://www.mulesoft.org/schema/mule/secure-properties/current/mule-secure-properties.xsd
+http://www.mulesoft.org/schema/mule/api-gateway http://www.mulesoft.org/schema/mule/api-gateway/current/mule-api-gateway.xsd">
+	<http:listener-config name="HTTPS_Listener_Config_sys-cache-api" doc:name="HTTP Listener config" doc:id="fca555b2-17af-48b3-afa5-d82d541af784">
+		<http:listener-connection host="${host}" port="${port}" protocol="HTTPS">
+			<tls:context >
+				<tls:key-store type="jks" path="${keystore.path}" keyPassword="${secure::password}" password="${secure::password}"/>
+			</tls:context>
+		</http:listener-connection>
+	</http:listener-config>
+	<configuration-properties doc:name="Configuration properties" doc:id="93845fed-ed56-48f7-b87b-834609a2e9a7" file="config/sys-cache-api-${mule.env}.properties"/>
+	<apikit:config outboundHeadersMapName="outboundHeadersMapName" httpStatusVarName="httpStatus" doc:name="Router" doc:id="945e8ed8-cab6-4160-9998-4bd245463cac" name="sys-cache-api-config" api="api/sys-cache-api.raml" />
+	<os:object-store name="ObjectStore_cache" doc:name="Object store" doc:id="07e73f1d-96f9-45a7-8e87-11e70836f55b" />
+	<secure-properties:config name="Secure_Properties_Config_sys-cache-api" doc:name="Secure Properties Config" doc:id="e82e0060-6c27-40dc-b4d2-b7b18b8819fc" file="config/sys-cache-api-${mule.env}.properties" key="${key}" >
+		<secure-properties:encrypt algorithm="Blowfish" />
+	</secure-properties:config>
+	<api-gateway:autodiscovery apiId="${api.id}" ignoreBasePath="true" doc:name="API Autodiscovery" doc:id="0c7ae11d-69a6-4427-b727-53b98f1c07ec" flowRef="sys-cache-api-main" />
+</mule>
