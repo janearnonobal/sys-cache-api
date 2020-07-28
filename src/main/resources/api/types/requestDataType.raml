@@ -1,13 +1,15 @@
 #%RAML 1.0 DataType
 properties:
-  key:
+  Key:
     type: string
     maxLength: 100
-    example: "Bridge-91734"
-  value:
+    example: "spectre-freefb-639178250106"
+  Value:
+    description: Holds the value of the key.
     type: string
     maxLength: 1
     example: "1"
-  expiration:
-   type: integer
-   required: false
+  Expiration:
+    description: Unix timestamp that sets timeout on key.
+    type: integer
+    required: false

@@ -24,6 +24,34 @@
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<version>3.1.2</version>
+				<executions>
+					<execution>
+						<id>unpack</id>
+						<phase>generate-sources</phase>
+						<goals>
+							<goal>unpack</goal>
+						</goals>
+						<configuration>
+							<artifactItems>
+								<artifactItem>
+									<groupId>72613f61-6538-4661-98a5-acb1c0a50cd3</groupId>
+									<artifactId>sys-cache-api</artifactId>
+									<version>1.0.2</version>
+									<type>zip</type>
+									<classifier>raml</classifier>
+									<overWrite>true</overWrite>
+									<outputDirectory>src/main/resources/api/</outputDirectory>
+									<includes>**/*</includes>
+								</artifactItem>
+							</artifactItems>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-clean-plugin</artifactId>
 				<version>3.0.0</version>
 			</plugin>
@@ -137,7 +165,7 @@
 		<repository>
 			<id>anypoint-exchange-v2</id>
 			<name>Anypoint Exchange</name>
-			<url>https://maven.anypoint.mulesoft.com/api/v2/organizations/72613f61-6538-4661-98a5-acb1c0a50cd3/maven</url>
+			<url>https://maven.anypoint.mulesoft.com/api/v2/maven</url>
 			<layout>default</layout>
 		</repository>
 		<repository>

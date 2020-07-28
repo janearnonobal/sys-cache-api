@@ -10,9 +10,9 @@
 	<munit:config name="test-sys-cache-api.xml" />
 	<munit:test name="sys-cache-test-suite:get-cache" doc:id="25182ac8-36e7-473b-a01b-e503400ca66b" >
 		<munit:behavior>
-			<munit-tools:mock-when doc:name="redis:get" doc:id="372e09b2-009b-409e-aefb-5beaced75afe" processor="redis:get">
+			<munit-tools:mock-when doc:name="os:retrieve" doc:id="372e09b2-009b-409e-aefb-5beaced75afe" processor="os:retrieve">
 				<munit-tools:with-attributes >
-					<munit-tools:with-attribute whereValue="Get" attributeName="doc:name" />
+					<munit-tools:with-attribute whereValue="Retrieve" attributeName="doc:name" />
 				</munit-tools:with-attributes>
 				<munit-tools:then-return >
 					<munit-tools:payload value='#["1"]' mediaType="text/plain" encoding="UTF-8" />
@@ -34,10 +34,9 @@
 	</munit:test>
 	<munit:test name="sys-cache-test-suite:set-cache" doc:id="711af27f-3a53-442d-a4b9-6efba77597f8" >
 		<munit:behavior >
-			<munit-tools:mock-when doc:name="redis:set" doc:id="bbb010a9-081f-436a-9fc6-1e0212fc1584" processor="redis:set">
+			<munit-tools:mock-when doc:name="os:store" doc:id="bbb010a9-081f-436a-9fc6-1e0212fc1584" processor="os:store">
 				<munit-tools:with-attributes >
-					<munit-tools:with-attribute whereValue="Set" attributeName="doc:name" />
-					<munit-tools:with-attribute whereValue="Set" attributeName="doc:name" />
+					<munit-tools:with-attribute whereValue="Store" attributeName="doc:name" />
 				</munit-tools:with-attributes>
 				<munit-tools:then-return >
 					<munit-tools:payload value='#["OK"]' mediaType="text/plain" />
@@ -59,9 +58,9 @@
 	</munit:test>
 	<munit:test name="sys-cache-test-suite:validation-cache" doc:id="ae8449e6-b3fc-40ba-b7a1-f3a0e951d074" expectedErrorType="REDIS:UNKNOWN">
 		<munit:behavior >
-			<munit-tools:mock-when doc:name="redis:get" doc:id="bdf336b8-3b2b-4e0a-b868-b4318f40aedc" processor="redis:get" >
+			<munit-tools:mock-when doc:name="os:retrieve" doc:id="bdf336b8-3b2b-4e0a-b868-b4318f40aedc" processor="os:retrieve" >
 				<munit-tools:with-attributes >
-					<munit-tools:with-attribute whereValue="Get" attributeName="doc:name" />
+					<munit-tools:with-attribute whereValue="Retrieve" attributeName="doc:name" />
 				</munit-tools:with-attributes>
 				<munit-tools:then-return >
 					<munit-tools:error typeId="REDIS:UNKNOWN" />
