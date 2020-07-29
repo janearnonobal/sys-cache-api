@@ -23,7 +23,7 @@
 			<munit:set-event doc:name="Set attributes" doc:id="45ebef33-1c78-4e5f-9d34-3c99ef7c3c7e" >
 				<munit:attributes value="#[{uriParams:{key:'spectre-freefb-639276749952'}}]" />
 				<munit:variables >
-					<munit:variable key="correlationId" value="${correlation.id}" />
+					<munit:variable key="correlationId" value="ecabd5b0-b427-11ea-869e-0242ac140003" />
 				</munit:variables>
 			</munit:set-event>
 			<flow-ref doc:name="get:\cache\(key):sys-cache-api-config" doc:id="a6e598da-13d7-4dea-926f-1393417f4272" name="get:\cache\(key):sys-cache-api-config"/>
@@ -47,7 +47,7 @@
 			<munit:set-event doc:name="Set cache payload" doc:id="220d5b17-847c-4ca4-bc14-bdd8a739ee60" >
 				<munit:payload value="#[MunitTools::getResourceAsString('examples/cache.json')]" mediaType="application/json" />
 				<munit:variables >
-					<munit:variable key="correlationId" value="${correlation.id}" />
+					<munit:variable key="correlationId" value="ecabd5b0-b427-11ea-869e-0242ac140003" />
 				</munit:variables>
 			</munit:set-event>
 			<flow-ref doc:name="post:\cache:sys-cache-api-config" doc:id="81d57d81-2cbd-40bb-a85e-974ce1cae5d1" name="post:\cache:sys-cache-api-config"/>
@@ -71,7 +71,7 @@
 			<munit:set-event doc:name="Set attributes" doc:id="51105b8e-b3aa-41f9-90fa-2f87dad6c142" >
 				<munit:attributes value="#[{uriParams:{key:'spectre-freefb-639276749952'}}]" />
 				<munit:variables >
-					<munit:variable key="correlationId" value="${correlation.id}" />
+					<munit:variable key="correlationId" value="ecabd5b0-b427-11ea-869e-0242ac140003" />
 				</munit:variables>
 			</munit:set-event>
 			<flow-ref doc:name="get:\cache\(key):sys-cache-api-config" doc:id="da46e8a1-76e0-44b6-9bd6-9382ba4eb4d1" name="get:\cache\(key):sys-cache-api-config" />
