@@ -10,6 +10,8 @@
 	<packaging>mule-application</packaging>   
 
 	<name>sys-cache-api</name>
+	
+	
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -38,7 +40,7 @@
 								<artifactItem>
 									<groupId>72613f61-6538-4661-98a5-acb1c0a50cd3</groupId>
 									<artifactId>sys-cache-api</artifactId>
-									<version>1.0.2</version>
+									<version>1.0.3</version>
 									<type>zip</type>
 									<classifier>raml</classifier>
 									<overWrite>true</overWrite>
