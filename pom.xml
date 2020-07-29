@@ -99,9 +99,9 @@
 				<configuration>
 					<coverage>
 						<runCoverage>true</runCoverage>
-						<!-- <failBuild>false</failBuild> -->
+						<failBuild>true</failBuild>
 						
-						<requiredApplicationCoverage>80</requiredApplicationCoverage>
+						<requiredApplicationCoverage>${test.coverage}</requiredApplicationCoverage>
 						<formats>
 							<format>console</format>
 							<format>html</format>
